@@ -1,0 +1,24 @@
+{
+  "name": "memory-game",
+  "version": "1.0.0",
+  "description": "Memory game for Supercharge homework",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Oltier/memory-game.git"
+  },
+  "author": "Zoltán Tudlik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Oltier/memory-game/issues"
+  },
+  "homepage": "https://github.com/Oltier/memory-game#readme",
+  "dependencies": {
+    "express": "^4.14.1",
+    "hbs": "^4.0.1",
+    "nedb": "^1.8.0"
+  }
+}
