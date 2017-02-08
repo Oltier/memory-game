@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Oltier/memory-game#readme",
   "dependencies": {
+    "body-parser": "^1.16.0",
     "express": "^4.14.1",
     "hbs": "^4.0.1",
     "nedb": "^1.8.0"

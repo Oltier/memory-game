@@ -16,6 +16,26 @@ body {
     overflow: hidden;
 }
 
+.table-wrapper {
+    position: absolute;
+    right: 20px;
+    left: 20px;
+}
+
+#highscores {
+    width: 100%;
+    text-align: center;
+}
+
+td, th {
+    text-align: center;
+}
+
+caption {
+    text-align: center;
+    color: white;
+}
+
 #startGameButton, #highScoresButton {
     font-weight: 400;
     padding-bottom: 10px;

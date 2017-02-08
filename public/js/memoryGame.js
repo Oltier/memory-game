@@ -10,6 +10,8 @@ var tiles = [],
     timer = 0,
     _interval = 100,
     tries = 0,
+    size = 6,
+    matches = 0,
     peekTime = 3000;
 
 function getRandomImageForTile() {
@@ -100,6 +102,9 @@ function checkMatch() {
         if(tiles[flippedTile].getBackContentImage() !== tiles[tileBeingFlippedId].getBackContentImage()) {
             setTimeout("tiles[" + flippedTile + "].revertFlip()", 2000);
             setTimeout("tiles[" + tileBeingFlippedId + "].revertFlip()", 2000);
+        } else {
+            matches++;
+            if(matches === size / 2) {setTimeout("endGame();", 2000)}
         }
         flippedTile = null;
         tileBeingFlippedId = null;
@@ -121,6 +126,70 @@ function onPeekComplete() {
 
 function onPeekStart() {
     setTimeout("hideTiles( function() {onPeekComplete();})", peekTime);
+}
+
+function endGame() {
+    $('#board').empty();
+    $('#board').html(
+        '<div class="form-wrapper">' +
+        '<div class="text-center"><h3>Wheeee! You won after ' + tries + ' tries! :)</h3></div>' +
+        '<form class="form-inline text-center" method="post" id="submitScoreForm">' +
+        '<div class="form-group">' +
+        '<label for="name" class=sr-only">Name: </label>' +
+        '<input required class="form-control" type="text" name="name" id="name">' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<button type="submit" class="btn btn-primary" id="submitScore">Submit score</button>' +
+        '</div>' +
+        '</form>' +
+        '</div>'
+    );
+    $('#submitScoreForm').on('submit', function (e) {
+        e.preventDefault();
+        var name = $('#name').val();
+        var values = {
+            'name': name,
+            'tries': tries,
+            'size': size
+        };
+
+        $.ajax({
+            url: '/',
+            type: 'POST',
+            cache: false,
+            data: values,
+            success: function(data) {
+                $('#board').empty();
+                $('#board').html(
+                    '<div class="table-wrapper">' +
+                    '<table id="highscores">' +
+                    '<caption>Highscores</caption>' +
+                    '<tr>' +
+                    '<th>Place</th>' +
+                    '<th>Name</th>' +
+                    '<th>Score</th>' +
+                    '<th>Table size</th>' +
+                    '</tr>' +
+                    '</table>' +
+                    '</div>'
+                );
+                console.log(data);
+                for(var i = 0; i < data.length; i++) {
+                    $('#highscores').append(
+                        '<tr>' +
+                        '<td>' + (i+1) + '.</td>' +
+                        '<td>' + data[i].name + '</td>' +
+                        '<td>' + data[i].tries + '</td>' +
+                        '<td>' + data[i].size + '</td>' +
+                        '</tr>'
+                    )
+                }
+            },
+            error: function(jqXHR, textStatus, error) {
+                console.log(jqXHR.responseText);
+            }
+        })
+    })
 }
 
 $(document).ready(function(){
@@ -147,7 +216,7 @@ function initSize() {
     );
     $('#setDeckSizeButton').click(function (e) {
         e.preventDefault();
-        var size = $('#boardSize').val();
+        size = $('#boardSize').val();
         if(size >= 6 && size <= 20 && size % 2 === 0) {
             restart(size);
         }
@@ -156,6 +225,7 @@ function initSize() {
 
 function restart(size) {
     tries = 0;
+    matches = 0;
     initTiles(size);
     setTimeout("revealTiles(function() {onPeekStart();})", _interval);
 }
