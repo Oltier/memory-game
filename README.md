@@ -21,7 +21,7 @@ You will be able to compare your results to other players or if you click on the
 ## Running the application
 4. Open the folder, where you have extracted the files recently.
 1. Using shift+right click, you can select *Open command window here* option.
-1. Type the following in the command window:
+1. Type the following in the command window, assuming you already have Node installed (if you haven't, you can download and install it from [the Node.js project website](https://nodejs.org/en/)):
 `node server.js`
 2. You should see *Server is started* information message in the command window.
 3. Open a web browser. (Latest Firefox, Chrome or Edge is recommended)
