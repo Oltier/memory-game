@@ -12,7 +12,7 @@ var tiles = [],
     tries = 0,
     size = 6,
     matches = 0,
-    peekTime = 3000;
+    peekTime = 2000;
 
 function getRandomImageForTile() {
     var randomImage = Math.floor((Math.random() * tileAllocation.length));
@@ -163,17 +163,16 @@ function endGame() {
                 $('#board').html(
                     '<div class="table-wrapper">' +
                     '<table id="highscores">' +
-                    '<caption>Highscores</caption>' +
+                    '<caption>Highscores for table size ' + data[0].size + '</caption>' +
                     '<tr>' +
                     '<th>Place</th>' +
                     '<th>Name</th>' +
-                    '<th>Score</th>' +
+                    '<th>Tries</th>' +
                     '<th>Table size</th>' +
                     '</tr>' +
                     '</table>' +
                     '</div>'
                 );
-                console.log(data);
                 for(var i = 0; i < data.length; i++) {
                     $('#highscores').append(
                         '<tr>' +
@@ -192,10 +191,61 @@ function endGame() {
     })
 }
 
-$(document).ready(function(){
+$(document).ready(function() {
     initSize();
     $('#startGameButton').click(function () {
         initSize();
+    });
+
+    $('#highScoresButton').click(function (e) {
+        e.preventDefault();
+        function getHighScores(tableSize) {
+            $.ajax({
+                url: '/highscores',
+                type: 'POST',
+                cache: false,
+                data: {
+                    'size': tableSize
+                },
+                success: function (data) {
+                    if(data.length > 0) {
+                        $('#highscores').append(
+                            '<tr>' +
+                            '<td colspan="2" style="text-align: left; padding-top: 5px;"><b>Top scorer for table size ' + data[0].size + ':</b></td>' +
+                            '</tr>'
+                        );
+                        for(var i = 0; i < data.length; i++){
+                            $('#highscores').append(
+                                '<tr>' +
+                                '<td class="leftColumn">' + data[i].name + '</td>' +
+                                '<td class="rightColumn">' + data[i].tries + '</td>' +
+                                '</tr>'
+                            )
+                        }
+                    }
+                },
+                error: function (jqXHR, textStatus, error) {
+                    console.log(jqXHR.responseText);
+                }
+            });
+        }
+
+        $('#board').empty();
+        $('#board').html(
+            '<div class="top-scorer-table-wrapper">' +
+            '<table id="highscores">' +
+            '<caption>Highscore for each table size</caption>' +
+            '<tr>' +
+            '<th class="leftColumn">Name</th>' +
+            '<th class="rightColumn">Tries</th>' +
+            '</tr>' +
+            '</table>' +
+            '</div>'
+        );
+
+        for(var i = 6; i <= 20; i+= 2) {
+            getHighScores(i);
+        }
     });
 });
 

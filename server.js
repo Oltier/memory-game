@@ -13,9 +13,8 @@ app.use(bodyParser.urlencoded({
 
 var Datastore = require('nedb');
 app.db = new Datastore({
-    filename: 'models/highScores.db',
+    filename: 'models/highScore.db',
     autoload: true,
-    inMemoryOnly: true
 });
 
 var gameController  = require("./controllers/gameController");

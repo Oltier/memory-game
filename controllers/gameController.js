@@ -18,7 +18,6 @@ router.post('/', function(req,res) {
        name: name,
        tries: tries
    };
-    console.log("Received data");
    req.app.db.insert(doc, function (err, doc) {
        if(err) console.log("Error inserting: " + err);
        req.app.db.find({size: size}, {_id: 0}).sort({tries: 1}).limit(10).exec(function(err, docs) {
@@ -26,5 +25,13 @@ router.post('/', function(req,res) {
        })
    })
 });
+
+router.post('/highscores', function (req, res) {
+    var size = parseInt(req.body.size);
+    req.app.db.find({size: size}, {_id:0}).sort({tries: 1}).limit(1).exec(function(err, docs){
+        if(err) console.log(err);
+        res.json(docs);
+    });
+})
 
 module.exports = router;
